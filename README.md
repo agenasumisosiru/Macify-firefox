@@ -1,108 +1,87 @@
-# Macify — macOS Aerial Screensavers for Chrome & Firefox
+# Macfly-揚げナスによるカスタムバージョン — Chrome と Firefox 向け macOS の Aerial スクリーンセーバー
 
-![GitHub Repo stars](https://img.shields.io/github/stars/jason5ng32/Macify)
-![GitHub](https://img.shields.io/github/license/jason5ng32/Macify)
-![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/lgdipcalomggcjkohjhkhkbcpgladnoe)
-![GitHub contributors](https://img.shields.io/github/contributors/jason5ng32/Macify)
+ブラウザの新しいタブページを、macOS の aerial スクリーンセーバー動画と、落ち着いた任意のウィジェット数点に置き換えます。macOS は**不要**です。動画は Apple の CDN から配信され、Firefox が動作するあらゆるプラットフォームで再生できます。
+## 特徴
 
-Replace your browser's new tab page with macOS's aerial screensaver videos and a small set of calm, optional widgets. macOS is **not** required — videos are streamed from Apple's CDN and play in any platform that runs Chrome or Firefox.
+🎥 156 本の aerial 動画
 
-![screenshot](docs/screenshot.png)
-
-## Features
-
-- 🎥 **156 aerial videos** in 4K SDR, sourced from Apple's current macOS catalog (Landscapes, Cities, Underwater, Space, and more).
-- 🌤️ **Live weather** — current temperature, "feels like", 3-day forecast, sunrise/sunset, UV, wind, air quality. Powered by [Open-Meteo](https://open-meteo.com/), no API key required.
-- 📌 **Top sites** widget (Chrome only; Firefox shows empty gracefully).
-- 💬 **Random quotes** from a curated 500-entry public-domain set.
-- 🧘 **Zen mode** — fullscreen the video with optional ambient music.
-- 🔤 **4 languages** — English, 简体中文, 繁體中文, 日本語.
-
-## Install
-
-### Chrome
-
+## インストール
+本家のchrome版が
 [Install from Chrome Web Store](https://chromewebstore.google.com/detail/macify-macos-screensaver/lgdipcalomggcjkohjhkhkbcpgladnoe).
+です。
 
 ### Firefox
 
-See [firefox-port branch](https://github.com/agenasumisosiru/Macify/tree/firefox-port) for the Firefox-compatible version. Features are identical to Chrome, with Google Translate API for motto translation (instead of Chrome's native Translator API).
+Firefox 互換版は [firefox-port ブランチ](https://github.com/agenasumisosiru/Macify/tree/firefox-port) を参照してください。機能は Chrome 版と同一で、モットーの翻訳には Chrome のネイティブ Translator API の代わりに Google Translate API を使用します。
 
-Building from source or contributing? See [DEVELOPMENT.md](DEVELOPMENT.md).
 
-## Choosing a video source
+## 動画ソースの選択
 
-Two options. Each has a built-in step-by-step guide inside Macify's settings page; this section just summarises.
+### 1. Apple Server（デフォルト — 設定不要）
 
-### 1. Apple Server (default — zero setup)
+`sylvan.apple.com` から直接ストリーミングします。Chrome は Apple の証明書をデフォルトでは信頼しない場合があります。対処法は2つあります。
 
-Streams directly from `sylvan.apple.com`. Chrome may not trust Apple's certificate by default; two ways to fix it:
+**オプション A — リバースプロキシ（デフォルトで有効、本家のJason Ngさんに感謝します。）。** 動画リクエストは、証明書の処理を行うホストされた Cloudflare Worker 経由でルーティングされます。ローカル設定は不要です。便利ですが、長期的に依存すべきではありません。可能であればローカルホスティングを設定するか、証明書を信頼してください。
 
-**Option A — Reverse proxy (default on, easiest).** Video requests are routed through a hosted Cloudflare Worker that handles the certificate dance. Zero local setup. Convenient but should not be relied on long-term — set up local hosting or trust the cert when possible.
+**オプション B — Apple の証明書を手動で信頼する（最もクリーン）。** ブラウザ で一度 [https://sylvan.apple.com](https://sylvan.apple.com) を開いてください。セキュリティ警告が表示されるので、「詳細設定」をクリックし、「sylvan.apple.com に進む（安全ではありません）」を選びます。ブラウザはその信頼を記憶し、その後は直接接続できるようになります。
 
-**Option B — Trust Apple's cert manually (cleanest).** Visit [https://sylvan.apple.com](https://sylvan.apple.com) once in Chrome. You'll see a security warning — click "Advanced", then "Proceed to sylvan.apple.com (unsafe)". Chrome remembers the trust and direct connection works thereafter.
+### 2. ローカルサーバー（macOS ユーザーに推奨）
 
-![Chrome warning when trusting sylvan.apple.com](docs/chromewarnning.jpg)
-
-### 2. Local server (recommended for macOS users)
-
-Best performance, zero third-party dependency. **One command** configures macOS's built-in Apache to serve your local Aerial videos at `http://localhost:18000/videos/`:
+最高のパフォーマンスで、サードパーティ依存もありません。**1つのコマンド**で macOS 標準の Apache を設定し、ローカルの Aerial 動画を `http://localhost:18000/videos/` で配信できるようにします。
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/jason5ng32/Macify/main/scripts/local-server/setup.sh)
 ```
 
-Asks for your password once (sudo). Then in Macify's settings, switch the source to **Local server**.
+パスワードを一度だけ求められます（sudo）。その後、Macify の設定でソースを **Local server** に切り替えてください。
 
-To uninstall:
+アンインストールするには：
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/jason5ng32/Macify/main/scripts/local-server/uninstall.sh)
 ```
 
-The local server needs the videos on disk first. Two ways:
+ローカルサーバーを使うには、まず動画をディスクに保存しておく必要があります。方法は2つあります。
 
-**Through System Settings.** Open System Settings → Screen Saver → Aerial. Click each video you want (each is 500MB–1GB). Tedious for the full 156-video catalog but no extras needed.
+**システム設定から。** システム設定 → スクリーンセーバー → Aerial を開きます。保存したい各動画をクリックしてください（各動画は 500MB〜1GB です）。156 本すべて揃えるには手間がかかりますが、追加のものは不要です。
 
-![macOS screen saver settings](docs/systempreferrence.jpg)
-
-**One-line batch downloader.** Macify includes a Python downloader that pulls the full Aerial catalog (or a subset) directly from Apple's CDN, with progress bars, resume support, and category/random filtering:
+**ワンラインの一括ダウンローダー。** Macify には Python ダウンローダーが含まれており、進捗バー、再開対応、カテゴリ/ランダム絞り込み付きで、Apple の CDN から Aerial カタログ全体（または一部）を直接取得します。
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/jason5ng32/Macify/main/scripts/aerial_downloader/install.sh)
 ```
 
-Copy the command, paste it in Terminal, and follow the on-screen prompts. The full catalog is ~80–150 GB; the script reports the estimated size and your free disk space before asking for confirmation.
+コマンドをコピーして Terminal に貼り付け、画面の指示に従ってください。カタログ全体は約 80〜150 GB です。スクリプトは確認を求める前に、推定サイズと空きディスク容量を表示します。
 
-## Permissions
+## 権限
 
-Macify requests these permissions, all non-sensitive:
+Macify は以下の権限を要求しますが、いずれも機微情報ではありません。
 
-| Permission | Used for | Chrome | Firefox |
+| 権限 　　　| 　　　　用途 | 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　Chrome | Firefox |
 |---|---|---|---|
-| `storage` | Persist user preferences and cache weather data. | ✅ | ✅ |
-| `topSites` | Read Chrome's most-visited list for the Top Sites widget. | ✅ | ❌ (ignored) |
-| `favicon` | Show favicons next to Top Sites entries. | ✅ | ✅ (via standard web APIs) |
-| `idle` | Track when the user is away for Zen mode break reminder. | ✅ | ❌ (Firefox uses wall-clock time) |
+| `storage` | ユーザー設定の保持と天気データのキャッシュ。　　　　　　　　　　　　　　　　　| ✅ | ✅ |
+| `topSites` | Chrome の最も訪問したサイト一覧を読み取り、Top Sites ウィジェットに表示。 | ✅ | ❌（無視） |
+| `favicon` | Top Sites の各項目の横にファビコンを表示。 　　　　　　　　　　　　　　　　| ✅ | ✅（標準 Web API 経由） |
+| `idle` | Zen モードの休憩リマインダー用に、ユーザーが離席したタイミングを追跡。　　　　　| ✅ | ❌（Firefox では壁時計時間を使用） |
 
-No `history` permission. No host permissions for arbitrary sites.
+`history` 権限はありません。任意のサイトへの host 権限もありません。
 
-## Browser Differences
+## ブラウザの違い
 
-| Feature | Chrome | Firefox |
+| 機能 | Chrome | Firefox |
 |---|---|---|
-| Aerial videos | ✅ | ✅ |
-| Weather widget | ✅ | ✅ |
-| Top sites | ✅ | Empty (API not available) |
-| Quote translation | ✅ Native on-device | ✅ Google Translate API |
-| Zen mode | ✅ With idle detection | ✅ Wall-clock time |
-| Auto-exit timer | ✅ | ✅ |
+| Aerial 動画 | ✅ | ✅ |
+| 天気ウィジェット | ✅ | ✅ |
+| Top sites | ✅ | 空（API が利用不可） |
+| 引用の翻訳 | ✅ ネイティブのオンデバイス | ✅ Google Translate API |
+| Zen モード | ✅ idle 検出あり | ✅ 壁時計時間 |
+| 自動終了タイマー | ✅ | ✅ |
 | BGM | ✅ | ✅ |
 
-## License
+## ライセンス
 
-MIT. See [LICENSE](LICENSE).
+MIT。 [LICENSE](LICENSE) を参照してください。
 
-## Credits
+## クレジット
 
-Created by Jason Ng, Dofy, Setilis. Firefox port by agenasumisosiru. Aerial videos are © Apple Inc.
+Jason Ng、Dofy、Setilis により作成されました。Firefox 版は agenasumisosiru による移植です。Aerial 動画の著作権は © Apple Inc. に帰属します。
