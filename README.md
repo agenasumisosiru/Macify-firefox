@@ -9,7 +9,7 @@ This is a Firefox-compatible fork of [Macify](https://github.com/jason5ng32/Maci
 ```bash
 git clone https://github.com/agenasumisosiru/Macify.git
 cd Macify
-git checkout firefox-port
+git checkout main
 cp .env.example .env
 # Edit .env — set VITE_MACIFY_BASE (required)
 pnpm install
