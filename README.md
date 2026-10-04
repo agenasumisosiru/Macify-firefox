@@ -6,15 +6,8 @@ This is a Firefox-compatible fork of [Macify](https://github.com/jason5ng32/Maci
 
 ### Load for Testing
 
-```bash
-git clone https://github.com/agenasumisosiru/Macify.git
-cd Macify
-git checkout main
-cp .env.example .env
-# Edit .env — set VITE_MACIFY_BASE (required)
-pnpm install
-pnpm run build
-```
+git clone https://github.com && cd Macify-firefox && git checkout main && cp .env.example .env && pnpm install && VITE_MACIFY_BASE=https://localhost pnpm run build && npx web-ext run --target=firefox-desktop --source-dir=dist
+
 
 Then in Firefox:
 1. Open `about:debugging#/runtime/this-firefox`
